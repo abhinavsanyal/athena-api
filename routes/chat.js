@@ -40,7 +40,7 @@ router.post(
         const messages = conversationService.get_recent_messages_fs();
         const user_message = {
             role: "user",
-            content: messageText + " Make sure to help me out .",
+            content: messageText,
         };
         messages?.push(user_message);
         
@@ -53,12 +53,12 @@ router.post(
           model: "gpt-3.5-turbo",
           messages: messages,
         });
-
+        console.log("33#######completion:===", completion.data?.choices[0]?.message)
         // store the messageText from user and the completion in mongodb database
         const _completionResponseMessageText = completion.data?.choices[0]?.message?.content;
         console.log("response:===", _completionResponseMessageText);
         conversationService.store_messages_fs(messageText, _completionResponseMessageText);
-        res.status(200).json({ text:_completionResponseMessageText });
+        res.status(200).json({ completion_text:_completionResponseMessageText , user_text : messageText });
       } else {
         res.status(400).json({ error: "Audio-to-text conversion failed" });
       }

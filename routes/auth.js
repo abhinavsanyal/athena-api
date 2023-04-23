@@ -34,7 +34,7 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
 // Register
 router.post('/register', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password , name } = req.body;
 
     console.log("register API hit:::-",req.body);
 
@@ -43,10 +43,10 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'User with this email already exists' });
     }
 
-    const user = new User({ email, password });
+    const user = new User({ email, password, name });
     await user.save();
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
+      expiresIn: '10h',
     });
     res.status(201).json({ message: 'User registered successfully', user , token});
   } catch (err) {
@@ -73,7 +73,7 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
+      expiresIn: '10h',
     });
 
     res.status(200).json({ token, user });
