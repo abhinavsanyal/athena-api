@@ -12,7 +12,7 @@ module.exports = function (passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "http://athenaapi:3002/api/auth/google/callback",
+        callbackURL: "https://aggressive-hen-tie.cyclic.app/api/auth/google/callback",
         passReqToCallback   : true
       },
       async (accessToken, refreshToken, profile, done) => {
