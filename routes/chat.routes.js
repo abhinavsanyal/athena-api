@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const chatController = require("../controllers/chat.controller"); // Import chatController
+// const chatController = require("../controllers/chat.controller"); // Import chatController
+const agentController = require("../controllers/agent.controller"); // Import chatController
 const { requireAuth } = require("../middlewares/authMiddleware");
 const conversationService = require("../services/conversation.service");
 const { Configuration, OpenAIApi } = require("openai");
@@ -37,28 +38,24 @@ router.post(
       console.log("messageText:===", messageText);
       if (messageText) {
         //
-        const messages = conversationService.get_recent_messages_fs();
-        const user_message = {
-            role: "user",
-            content: messageText,
-        };
-        messages?.push(user_message);
-        
-        //   const messages = [{ role: "user", content: messageText }];
-        //   const response = await openai.ChatCompletion({
-            //     model: "gpt-3.5-turbo",
-            //     messages: messages,
-            //   });
-        const completion = await openai.createChatCompletion({
-          model: "gpt-3.5-turbo",
-          messages: messages,
-        });
-        console.log("33#######completion:===", completion.data?.choices[0]?.message)
-        // store the messageText from user and the completion in mongodb database
-        const _completionResponseMessageText = completion.data?.choices[0]?.message?.content;
-        console.log("response:===", _completionResponseMessageText);
-        conversationService.store_messages_fs(messageText, _completionResponseMessageText);
-        res.status(200).json({ completion_text:_completionResponseMessageText , user_text : messageText });
+        // const messages = conversationService.get_recent_messages_fs();
+        // const user_message = {
+        //     role: "user",
+        //     content: messageText,
+        // };
+        // messages?.push(user_message);
+        // const completion = await openai.createChatCompletion({
+        //   model: "gpt-3.5-turbo",
+        //   messages: messages,
+        // });
+        // console.log("33#######completion:===", completion.data?.choices[0]?.message)
+        // // store the messageText from user and the completion in mongodb database
+        // const _completionResponseMessageText = completion.data?.choices[0]?.message?.content;
+        // console.log("response:===", _completionResponseMessageText);
+        // conversationService.store_messages_fs(messageText, _completionResponseMessageText);
+        const replyFromAgent = await agentController.runConversationalAgentWithText(messageText);
+        console.log("replyFromAgent:===", replyFromAgent.output); 
+        res.status(200).json({ completion_text:replyFromAgent.output , user_text : messageText });
       } else {
         res.status(400).json({ error: "Audio-to-text conversion failed" });
       }
@@ -69,26 +66,25 @@ router.post(
   }
 );
 
-// Define a new route for text-to-speech conversion
-router.post("/text-to-speech", requireAuth, async (req, res) => {
-  try {
-    const { message, stability, similarity_boost, voiceId } = req.body;
-    const speechData = await chatController.convertTextToSpeech(
-      message,
-      stability,
-      similarity_boost,
-      voiceId
-    );
-    // console.log("speechdata", speechData);
-    if (speechData) {
-      res.status(200).json(speechData);
-    } else {
-      res.status(400).json({ error: "Text-to-speech conversion failed" });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+// // Define a new route for text-to-speech conversion
+// router.post("/text-to-speech", requireAuth, async (req, res) => {
+//   try {
+//     const { message, stability, similarity_boost, voiceId } = req.body;
+//     const speechData = await chatController.convertTextToSpeech(
+//       message,
+//       stability,
+//       similarity_boost,
+//       voiceId
+//     );
+//     if (speechData) {
+//       res.status(200).json(speechData);
+//     } else {
+//       res.status(400).json({ error: "Text-to-speech conversion failed" });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
 module.exports = router;
 // const express = require("express");

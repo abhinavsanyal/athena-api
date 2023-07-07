@@ -15,7 +15,7 @@ module.exports = function (passport) {
         callbackURL: "https://aggressive-hen-tie.cyclic.app/api/auth/google/callback",
         passReqToCallback   : true
       },
-      async (accessToken, refreshToken, profile, done) => {
+      async (accessToken, refreshToken, profile, cb) => {
         try {
           console,log("profile:::::::::",profile);
           const existingUser = await User.findOne({
@@ -23,7 +23,7 @@ module.exports = function (passport) {
           });
 
           if (existingUser) {
-            return done(null, existingUser);
+            return cb(null, existingUser);
           }
 
           const newUser = new User({
@@ -32,9 +32,9 @@ module.exports = function (passport) {
           });
 
           await newUser.save();
-          done(null, newUser);
+          cb(null, newUser);
         } catch (err) {
-          done(err, null);
+          cb(err, null);
         }
       }
     )
