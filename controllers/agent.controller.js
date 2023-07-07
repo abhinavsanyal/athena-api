@@ -26,9 +26,13 @@ agentController.runConversationalAgentWithText = async (humanMessage) => {
     verbose: true,
   });
   console.log("Loaded agent.");
+  try{
   const response = await executor._call({input:humanMessage});
-  console.log("Response::",response);
   return response;
+  console.log("Response::",response);
+  } catch(e){
+    console.log("Error::",e);
+  }
 };
 module.exports = agentController;
 

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-// const chatController = require("../controllers/chat.controller"); // Import chatController
+const chatController = require("../controllers/chat.controller"); // Import chatController
 const agentController = require("../controllers/agent.controller"); // Import chatController
 const { requireAuth } = require("../middlewares/authMiddleware");
 const conversationService = require("../services/conversation.service");
@@ -53,9 +53,10 @@ router.post(
         // const _completionResponseMessageText = completion.data?.choices[0]?.message?.content;
         // console.log("response:===", _completionResponseMessageText);
         // conversationService.store_messages_fs(messageText, _completionResponseMessageText);
-        const replyFromAgent = await agentController.runConversationalAgentWithText(messageText);
-        console.log("replyFromAgent:===", replyFromAgent.output); 
-        res.status(200).json({ completion_text:replyFromAgent.output , user_text : messageText });
+        const replyFromAgent = await chatController.getChatResponseV2(messageText);
+        // const replyFromAgent = await agentController.runConversationalAgentWithText(messageText);
+        console.log("replyFromAgent:===", replyFromAgent); 
+        res.status(200).json({ completion_text:replyFromAgent , user_text : messageText });
       } else {
         res.status(400).json({ error: "Audio-to-text conversion failed" });
       }
