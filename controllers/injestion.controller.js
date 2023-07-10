@@ -47,6 +47,38 @@ const initiateInjection = async (req, res) => {
   }
 };
 
+const initiateWebInjestion = async (req, res) => {
+  try {
+    const { urls } = req.body;
+
+    const indexName = "sensai";
+    const vectorDimension = 1536;
+    const client = new PineconeClient();
+    
+    await client.init({
+      apiKey: process.env.PINECONE_API_KEY,
+      environment: process.env.PINECONE_ENVIRONMENT,
+    });
+
+    await injestionService.createPineconeIndex(
+      client,
+      indexName,
+      vectorDimension
+    );
+
+    await injestionService.updatePineconeWithDataFromWebPages(
+      client,
+      indexName,
+      urls
+    );
+
+    res.status(200).json({message: "Success"});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({message: "Failed", error});
+  }
+};
+
 module.exports = {
   initiateInjection,
 };

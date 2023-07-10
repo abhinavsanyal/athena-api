@@ -106,7 +106,7 @@ const updatePinecone = async (client, indexName, docs) => {
   }
 };
 
-const updatePineconeWithDataFromWebPages = async (client, indexName) => {
+const updatePineconeWithDataFromWebPages = async (client, indexName, urls) => {
   console.log("Retrieving Pinecone index...");
   // 3. Retrieve Pinecone index
   const index = client.Index(indexName);
@@ -115,7 +115,7 @@ const updatePineconeWithDataFromWebPages = async (client, indexName) => {
     `Pinecone updatePineconeWithDataFromWebPages :: index retrieved: ${indexName} and index ${index}`
   );
 
-  await main(index);
+  await main(index, urls);
 };
 
 module.exports = {

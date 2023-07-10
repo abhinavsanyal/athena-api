@@ -17,10 +17,10 @@ if (!process.env.PINECONE_ENVIRONMENT) {
   throw new Error("PINECONE_ENVIRONMENT is not set");
 }
 
-const main = async (index) => {
+const main = async (index, urls) => {
   pineconeIndex = index;
 
-  const markdowns = await scrape_all_pages();
+  const markdowns = await scrape_all_pages(urls);
   await generate_embeddings(markdowns.join("\n\n"));
 };
 
@@ -28,8 +28,8 @@ async function get_all_pages_from_cache() {
   return await fs.readFile("generated/all.txt", "utf8");
 }
 
-async function scrape_all_pages() {
-  const { urls } = JSON.parse(await fs.readFile("scripts/pages.json", "utf8"));
+async function scrape_all_pages(urls) {
+//   const { urls } = JSON.parse(await fs.readFile("scripts/pages.json", "utf8"));
   console.log(`Got ${urls.length} urls ready to scrape`);
 
   const browser = await puppeteer.launch();
