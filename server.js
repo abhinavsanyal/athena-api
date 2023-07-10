@@ -37,6 +37,7 @@ app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/experts", require("./routes/expert.routes"));
 app.use("/api/ml-models", require("./routes/ml-model.routes"));
 app.use("/api/chat", require("./routes/chat.routes"));
+app.use("/api/injestion", require("./routes/injestion.routes"));
 
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
