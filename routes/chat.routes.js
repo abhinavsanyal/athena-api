@@ -51,7 +51,7 @@ router.post(
         // const _completionResponseMessageText = completion.data?.choices[0]?.message?.content;
         // console.log("response:===", _completionResponseMessageText);
         // conversationService.store_messages_fs(messageText, _completionResponseMessageText);
-        const replyFromAgent = await chatController.getChatResponseV2(messageText);
+        const replyFromAgent = await chatController.getAgentResponse(messageText);
         // const replyFromAgent = await agentController.runConversationalAgentWithText(messageText);
         console.log("replyFromAgent:===", replyFromAgent); 
         res.status(200).json({ completion_text:replyFromAgent , user_text : messageText });
@@ -65,6 +65,27 @@ router.post(
   }
 );
 
+
+
+router.post(
+  "/text-completion",
+  async (req, res) => {
+    try {
+      const messageText = req.body.message;
+      console.log("messageText:===", messageText);
+      if (messageText) {
+        const replyFromAgent = await chatController.getAgentResponse(messageText);
+        console.log("replyFromAgent:===", replyFromAgent); 
+        res.status(200).json({ completion_text:replyFromAgent , user_text : messageText });
+      } else {
+        res.status(400).json({ error: "text conversion failed" });
+      }
+    } catch (error) {
+      console.log("error:===", error.message);
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
 // // Define a new route for text-to-speech conversion
 // router.post("/text-to-speech", requireAuth, async (req, res) => {
 //   try {
