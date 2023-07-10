@@ -8,7 +8,7 @@ const agentController = { };
 
 agentController.runConversationalAgentWithText = async (humanMessage) => {
   process.env.LANGCHAIN_HANDLER = "langchain";
-  const model = new ChatOpenAI({ temperature: 0 , openAIApiKey: process.env.OPEN_AI_KEY});
+  const model = new ChatOpenAI({ temperature: 0 , openAIApiKey: process.env.OPENAI_API_KEY});
   const tools = [
     new SerpAPI(process.env.SERPAPI_API_KEY, {
       location: "Austin,Texas,United States",
@@ -48,7 +48,7 @@ module.exports = agentController;
 //   // Initialize the ChatOpenAI model with the provided API key and temperature
 //   const model = new ChatOpenAI({
 //     temperature: 0,
-//     openAIApiKey: process.env.OPEN_AI_KEY,
+//     openAIApiKey: process.env.OPENAI_API_KEY,
 //   });
 
 //   // Initialize the tools (SerpAPI and Calculator)

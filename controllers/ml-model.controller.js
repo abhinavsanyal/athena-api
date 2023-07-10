@@ -4,7 +4,7 @@ const fs = require("fs");
 const { Configuration, OpenAIApi, FineTunes } = require("openai");
 const ExcelJS = require("exceljs");
 
-const configuration = new Configuration({ apiKey: process.env.OPEN_AI_KEY });
+const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
 const openai = new OpenAIApi(configuration);
 
 async function getModels(req, res) {

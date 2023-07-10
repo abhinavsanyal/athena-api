@@ -2,12 +2,12 @@ const axios = require("axios");
 const conversationService = require("../services/conversation.service");
 const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
-  apiKey: process.env.OPEN_AI_KEY,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
 // Load environment variables
-const { OPEN_AI_ORG, OPEN_AI_KEY, ELEVEN_LABS_API_KEY } = process.env;
+const { OPEN_AI_ORG, OPENAI_API_KEY, ELEVEN_LABS_API_KEY } = process.env;
 
 // Define the chat controller
 const chatController = {};
