@@ -1,5 +1,6 @@
 const axios = require("axios");
 const conversationService = require("../services/conversation.service");
+const { queryOpenAiAgent } = require("../services/agent.service");
 const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -54,6 +55,16 @@ chatController.getChatResponse = async (userId, assistantId, messageInput) => {
     console.log("response::", response);
     const messageText = response.choices[0].message.content;
     return messageText;
+  } catch (error) {
+    console.error(error);
+    return;
+  }
+};
+
+chatController.getAgentResponse = async (messageInput, userId="sensai", assistantId="sensai" ) => {
+  try {
+    const response = await queryOpenAiAgent(userId, assistantId, messageInput)
+    return response;
   } catch (error) {
     console.error(error);
     return;
