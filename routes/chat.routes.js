@@ -14,9 +14,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-// Load environment variables
-// const { OPEN_AI_ORG, OPEN_AI_KEY, ELEVEN_LABS_API_KEY } = process.env;
-
+//
 router.post(
   "/audio-to-text-completion",
   requireAuth,
