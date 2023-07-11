@@ -1,5 +1,12 @@
 const { OpenAIEmbeddings } = require("langchain/embeddings/openai");
-const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
+const { CharacterTextSplitter } = require("langchain/text_splitter");
+const { PineconeClient } = require("@pinecone-database/pinecone");
+const { PineconeStore } = require('langchain/vectorstores/pinecone');
+const client = new PineconeClient();
+client.init({
+    apiKey: process.env.PINECONE_API_KEY,
+    environment: process.env.PINECONE_ENVIRONMENT,
+});
 
 const { main } = require("../utils/web.utils");
 
