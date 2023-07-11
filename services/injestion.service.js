@@ -1,5 +1,12 @@
 const { OpenAIEmbeddings } = require("langchain/embeddings/openai");
-const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
+const { CharacterTextSplitter } = require("langchain/text_splitter");
+const { PineconeClient } = require("@pinecone-database/pinecone");
+const { PineconeStore } = require('langchain/vectorstores/pinecone');
+const client = new PineconeClient();
+client.init({
+    apiKey: process.env.PINECONE_API_KEY,
+    environment: process.env.PINECONE_ENVIRONMENT,
+});
 
 const { main } = require("../utils/web.utils");
 
@@ -92,6 +99,50 @@ const updatePinecone = async (client, indexName, docs) => {
           batch = [];
         }
       }
+      // 10. Log the number of vectors updated
+      console.log(`Pinecone index updated with ${chunks.length} vectors`);
+    }
+
+    return true;
+
+  } catch (error) {
+
+    console.log(error);
+
+    throw error;
+  }
+};
+
+const updatePineconeNew = async (client, indexName, docs) => {
+  try {
+    console.log("Retrieving Pinecone index...");
+    // 3. Retrieve Pinecone index
+    const index = client.Index(indexName);
+    // 4. Log the retrieved index name
+    console.log(`Pinecone index retrieved: ${indexName}`);
+    // 5. Process each document in the docs array
+    for (const doc of docs) {
+      console.log(`Processing document: ${doc.metadata.source}`);
+      const txtPath = doc.metadata.source;
+      const text = doc.pageContent;
+      // 6. Create RecursiveCharacterTextSplitter instance
+      const textSplitter = new CharacterTextSplitter({
+        separator: "\n",
+        chunkSize: 1000,
+        chunkOverlap:200,
+      });
+      console.log("Splitting text into chunks...");
+      // 7. Split text into chunks (documents)
+      const chunks = await textSplitter.splitText(text);
+      console.log(`Text split into ${chunks.length} chunks`);
+      console.log(
+        `Calling OpenAI's Embedding endpoint documents with ${chunks.length} text chunks ...`
+      );
+      // 8. Create OpenAI embeddings for documents
+      const vectorStore = await PineconeStore.fromTexts(
+        chunks,
+        new OpenAIEmbeddings(),
+        { pineconeIndex: index });
       // 10. Log the number of vectors updated
       console.log(`Pinecone index updated with ${chunks.length} vectors`);
     }
