@@ -81,7 +81,7 @@ router.post(
       if (messageText) {
         const replyFromAgent = await chatController.getAgentResponse(messageText);
         console.log("replyFromAgent:===", replyFromAgent); 
-        res.status(200).json({ completion_text:replyFromAgent , user_text : messageText });
+        res.status(200).json({ completion_text:replyFromAgent });
       } else {
         res.status(400).json({ error: "text conversion failed" });
       }
