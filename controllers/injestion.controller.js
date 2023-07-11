@@ -86,4 +86,5 @@ const initiateWebInjestion = async (req, res) => {
 
 module.exports = {
   initiateInjection,
+  initiateWebInjestion
 };

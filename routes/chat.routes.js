@@ -21,7 +21,7 @@ router.post(
   upload.single("file"),
   async (req, res) => {
     try {
-    //   console.log("req.file:===", req.file);
+      // console.log("req.file:===", req.file);
       const audioFile = req.file.buffer;
       const tmpFilename = "tmp_audio_file.wav";
       fs.writeFileSync(tmpFilename, audioFile);
@@ -30,12 +30,12 @@ router.post(
         "whisper-1"
       );
 
-    //   console.log("transcript:===", transcript);
+      // console.log("transcript:===", transcript);
       fs.unlinkSync(tmpFilename); // Delete the temporary file
       const messageText = transcript.data.text;
       console.log("messageText:===", messageText);
       if (messageText) {
-        //
+
         // const messages = conversationService.get_recent_messages_fs();
         // const user_message = {
         //     role: "user",
@@ -51,10 +51,15 @@ router.post(
         // const _completionResponseMessageText = completion.data?.choices[0]?.message?.content;
         // console.log("response:===", _completionResponseMessageText);
         // conversationService.store_messages_fs(messageText, _completionResponseMessageText);
-        const replyFromAgent = await chatController.getAgentResponse(messageText);
+
+
+        // const replyFromAgent = await chatController.getAgentResponse(messageText);
         // const replyFromAgent = await agentController.runConversationalAgentWithText(messageText);
-        console.log("replyFromAgent:===", replyFromAgent); 
-        res.status(200).json({ completion_text:replyFromAgent , user_text : messageText });
+        // console.log("replyFromAgent:===", replyFromAgent); 
+        // res.status(200).json({ completion_text:replyFromAgent , user_text : messageText });
+
+        res.status(200).json({ user_text : messageText });
+
       } else {
         res.status(400).json({ error: "Audio-to-text conversion failed" });
       }
