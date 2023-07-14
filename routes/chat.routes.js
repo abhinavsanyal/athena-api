@@ -77,7 +77,6 @@ router.post(
   async (req, res) => {
     try {
       const messageText = req.body.message;
-      console.log("messageText:===", messageText);
       if (messageText) {
         const replyFromAgent = await chatController.getAgentResponse(messageText);
         console.log("replyFromAgent:===", replyFromAgent); 
